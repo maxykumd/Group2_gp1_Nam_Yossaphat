@@ -1,0 +1,13 @@
+{
+    "ROS2.distro": "jazzy",
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/jazzy/lib/python3.12/site-packages",
+        "/home/maxz/enpm605_ws/install/group2_gp1f/lib/python3.12/site-packages",
+        "/home/maxz/enpm605_ws/build/group2_gp1f"
+    ],
+    "python.analysis.extraPaths": [
+        "/opt/ros/jazzy/lib/python3.12/site-packages",
+        "/home/maxz/enpm605_ws/install/group2_gp1f/lib/python3.12/site-packages",
+        "/home/maxz/enpm605_ws/build/group2_gp1f"
+    ]
+}

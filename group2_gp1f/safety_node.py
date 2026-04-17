@@ -16,7 +16,7 @@ class SafetyMonitor(Node):
         
         # alert threshold ros parameter
         self.declare_parameter('alert_threshold', 2.0)
-        self.get_parameter('alert_threshold').get_parameter_value().double_value
+        self._threshold = self.get_parameter('alert_threshold').get_parameter_value().double_value
         self.get_logger().info(f"Alert threshold set to {self._threshold} m")
         
         # Publisher for alert
@@ -35,7 +35,7 @@ class SafetyMonitor(Node):
             durability=DurabilityPolicy.VOLATILE,
         )
         self._fused_sub = self.create_subscription(
-            String,'/perception/fused',self._fused_callback,fused_qos,callback_group=self._group,)
+            String,'/perception/fused',self.fused_callback,fused_qos,callback_group=self._group,)
         
         # Subscriber to config
         config_qos = QoSProfile(
@@ -62,10 +62,10 @@ class SafetyMonitor(Node):
             durability=DurabilityPolicy.VOLATILE,
         )
         self._mismatch_sub = self.create_subscription(
-            String, '/sensors/camera', self.test_callback, mismatch_qos)
+            String, '/sensors/camera', self.mismatch_callback, mismatch_qos)
 
 
-    def fuse_callback(self, msg) -> None:
+    def fused_callback(self, msg) -> None:
         """
         Parse fuse msg and check lidar distance
         """
@@ -74,7 +74,7 @@ class SafetyMonitor(Node):
         try:
             infos = data.split(',')
             lidar_info = infos[1]
-            distance = float(lidar_info.split(':')[1].split(' ')[0]) # Get lidar dist from string
+            distance = float(lidar_info.split(':')[1].strip().split(' ')[0]) # Get lidar dist from string
         except ValueError as e:
             self.get_logger().error(f"Fail to parse fuse msg {data}:{e}")
             return

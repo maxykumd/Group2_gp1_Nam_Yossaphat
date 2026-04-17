@@ -65,7 +65,7 @@ def generate_launch_description():
     ])
 
 
-    config_publisher_node = Node(
+    config_node = Node(
         package='group2_gp1f',
         executable='run_config_node',
         name='config_publisher',
@@ -98,7 +98,7 @@ def generate_launch_description():
     logger_node = Node(
         package='group2_gp1f',
         executable='run_logger_node',
-        name='logger',
+        name='loggerss',
         output='screen',
         emulate_tty=True,
         condition=IfCondition(LaunchConfiguration('enable_logger')),
@@ -107,7 +107,7 @@ def generate_launch_description():
     return LaunchDescription([
         enable_logger_arg,
         alert_threshold_arg,
-        config_publisher_node,
+        #config_node,
         sensor_group,
         fusion_node,
         safety_monitor_node,

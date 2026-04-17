@@ -7,7 +7,7 @@ from group2_gp1f.safety_node import SafetyMonitor
 
 def main(args=None):
     rclpy.init(args=args)
-    node = SafetyMonitor("safety_monitor_node")
+    node = SafetyMonitor("safety_node")
 
     try:
         rclpy.spin(node)

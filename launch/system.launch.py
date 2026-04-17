@@ -68,7 +68,7 @@ def generate_launch_description():
     config_node = Node(
         package='group2_gp1f',
         executable='run_config_node',
-        name='config_publisher',
+        name='config_pub',
         output='screen',
         emulate_tty=True,
     )
@@ -107,7 +107,7 @@ def generate_launch_description():
     return LaunchDescription([
         enable_logger_arg,
         alert_threshold_arg,
-        #config_node,
+        config_node,
         sensor_group,
         fusion_node,
         safety_monitor_node,

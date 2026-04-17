@@ -32,7 +32,7 @@ setup(
         'run_safety_node = group2_gp1f.scripts.run_safety_node:main',
         'run_fusion_node = group2_gp1f.scripts.run_fusion_node:main',
         'run_logger_node = group2_gp1f.scripts.run_logger_node:main'
-        #'config_node = group2_gp1f.scripts.run_config_node:main'
+        'config_node = group2_gp1f.scripts.run_config_node:main'
         ]     
     },
 )

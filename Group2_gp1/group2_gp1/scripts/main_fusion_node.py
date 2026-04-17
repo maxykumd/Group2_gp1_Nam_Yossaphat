@@ -5,7 +5,6 @@ import rclpy
 from rclpy.executors import MultiThreadedExecutor
 from group2_gp1.fusion_node import FusionNode
 
-
 def main(args=None):
     rclpy.init(args=args)
 
@@ -21,7 +20,6 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

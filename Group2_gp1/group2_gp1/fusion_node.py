@@ -1,11 +1,11 @@
 # Name: Nam Facchetti & Yossaphat Kulvatunyou
 # Module: fusion_node.py - Scenario 3 Fusion Node
 
+import json
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 from std_msgs.msg import String, Float64
-
 
 class FusionNode(Node):
     """
@@ -116,8 +116,6 @@ class FusionNode(Node):
 
     def config_callback(self, msg: String) -> None:
         """Parse config JSON string."""
-        import json
-
         try:
             config = json.loads(msg.data)
             self._fusion_rate = config.get('fusion_rate', 5.0)

@@ -13,9 +13,9 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='maxz , namfacchetti',
-    maintainer_email='maxz@todo.todo, gfacchet@terpmail.umd.edu',
-    description='ROS 2 sensor fusion pipeline for ENPM605 Group 2 GP1',
+    maintainer='maxykumd , namfacchetti',
+    maintainer_email='maxyk@umd.edu, gfacchet@terpmail.umd.edu',
+    description='ROS 2 Sensor Fusion Pipeline for ENPM605, Group2 GP1',
     license='Apache-2.0',
     extras_require={
         'test': [
@@ -27,6 +27,9 @@ setup(
            'camera_node = group2_gp1.scripts.main_camera_node:main',
            'lidar_node = group2_gp1.scripts.main_lidar_node:main',
            'fusion_node = group2_gp1.scripts.main_fusion_node:main',
+           'safety_monitor = group2_gp1.scripts.main_safety_monitor:main',
+           'logger = group2_gp1.scripts.main_logger:main',
+           'config_publisher = group2_gp1.scripts.main_config_publisher:main',
         ],
     },
 )

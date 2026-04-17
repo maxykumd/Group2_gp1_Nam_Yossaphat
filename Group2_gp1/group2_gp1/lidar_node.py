@@ -17,6 +17,7 @@ class LidarNode(Node):
         _message (Float64): Message object storing LiDAR distance.
         _counter (int): Counter for number of published readings.
     """
+    
     def __init__(self, node_name: str):
         super().__init__(node_name)
         
@@ -31,7 +32,6 @@ class LidarNode(Node):
         self._publisher = self.create_publisher(Float64, "/sensors/lidar", lidar_qos) #msg_type: Any,topic: str, qos_profile: QoSProfile 
         self._timer = self.create_timer(0.2, self.publish_simulate_reading)
 
-    
     def publish_simulate_reading(self) -> None:
         """
         Timer callback that generates a random LiDAR distance reading

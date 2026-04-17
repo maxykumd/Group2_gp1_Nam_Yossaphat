@@ -1,11 +1,11 @@
-# Name: Yossaphat Kulvatunyou
-# UID: 112362550
+# Name: Yossaphat Kulvatunyou & Nam Facchett
 # Module: lidar_node.py - Scenario 3 Lidar Node
 
 from std_msgs.msg import Float64
 from rclpy.node import Node
 import random
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
+
 
 class LidarNode(Node):
     """
@@ -18,19 +18,21 @@ class LidarNode(Node):
         _message (Float64): Message object storing LiDAR distance.
         _counter (int): Counter for number of published readings.
     """
+
     def __init__(self, node_name: str):
         super().__init__(node_name)
-        
-        lidar_qos = QoSProfile(   # Follows Scenario 3 camera Ssensor QoS (System Architecture - Topics), need to make sure Specific Requirements point 2 later is "RELIABLE" to demonstrate intentional mismatch
+
+        lidar_qos = QoSProfile(  # Follows Scenario 3 camera Ssensor QoS (System Architecture - Topics), need to make sure Specific Requirements point 2 later is "RELIABLE" to demonstrate intentional mismatch
             depth=1,
             reliability=ReliabilityPolicy.BEST_EFFORT,
-            durability=DurabilityPolicy.VOLATILE
+            durability=DurabilityPolicy.VOLATILE,
         )
 
-        self._publisher = self.create_publisher(Float64, "/sensors/lidar", lidar_qos) #msg_type: Any,topic: str, qos_profile: QoSProfile 
+        self._publisher = self.create_publisher(
+            Float64, "/sensors/lidar", lidar_qos
+        )  # msg_type: Any,topic: str, qos_profile: QoSProfile
         self._timer = self.create_timer(0.2, self.publish_simulate_reading)
 
-    
     def publish_simulate_reading(self) -> None:
         """
         Timer callback that generates a random LiDAR distance reading

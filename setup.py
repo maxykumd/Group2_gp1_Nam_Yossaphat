@@ -25,7 +25,11 @@ setup(
     entry_points={
         'console_scripts': [
         'run_lidar_node = group2_gp1f.scripts.run_lidar_node:main',
+        'run_camera_node = group2_gp1f.scripts.camera_node:main',
+        'run_safety_node = group2_gp1f.scripts.run_safety_node:main',
+        'fusion_node = group2_gp1f.scripts.fusion_node:main',
         'run_logger_node = group2_gp1f.scripts.run_logger_node:main',
-        'run_safety_monitor_node = group2_gp1f.scripts.run_safety_node:main'        ],
+        'run_config_node = group2_gp1f.scripts.config_node:main'
+        ]     
     },
 )

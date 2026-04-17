@@ -1,15 +1,14 @@
-# Name: Yossaphat Kulvatunyou
-# UID: 112362550
+# Name: Yossaphat Kulvatunyou & Nam Facchett
 # Module: run_logger_node.py
 
 import rclpy
-from group2_gp1.logger_node import LoggerNode
+from group2_gp1f.logger_node import LoggerNode
 
 
 def main(args=None):
     rclpy.init(args=args)
     node = LoggerNode("logger_node")
-    
+
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

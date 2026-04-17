@@ -5,6 +5,7 @@
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="maxyk@umd.edu">maxz</maintainer>
+  <maintainer email="gfacchet@terpmail.umd.edu">nam</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>

@@ -1,7 +1,7 @@
-# Name: Yossaphat Kulvatunyou & Nam Facchetti
+# Name: Yossaphat Kulvatunyou & Nam Facchett
 # Module: safety_monitor_node.py
 
-from std_msgs.msg import Int64, String
+from std_msgs.msg import String
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup

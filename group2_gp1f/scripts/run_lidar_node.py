@@ -1,9 +1,8 @@
-# Name: Yossaphat Kulvatunyou
-# UID: 112362550
+# Name: Yossaphat Kulvatunyou & Nam Facchett
 # Module: run_lidar_node.py - Scenario 3 Lidar Node
 
 import rclpy
-from group2_gp1.lidar_node import LidarNode
+from group2_gp1f.lidar_node import LidarNode
 
 
 def main(args=None):

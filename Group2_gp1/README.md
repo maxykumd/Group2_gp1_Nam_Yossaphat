@@ -14,6 +14,11 @@ Member 2: Yossaphat Kulvatunyou
 
 UID: 112362550
 
+## Contribution:
+Yossaphat : lidar_node, logger_node, safety_monitor_node, launch_file and the entry_point script for lidar,logger,safety
+
+Nam :
+
 ## Scenario Summary:
 This project implements a multi-node ROS 2 perception pipeline that simulates a simplified autonomous vehicle sensor fusion system. The system integrates asynchronous data streams from a camera and a LiDAR sensor, combines them into a unified perception output, and monitors safety conditions based on the fused data.
 

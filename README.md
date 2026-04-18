@@ -17,7 +17,7 @@ UID: 112362550
 ## Contributions:
 Nam: I worked on the camera_node.py, main_camera_node.py, fusion_node.py, main_fusion_node.py, config_publisher.py, and main_config_publisher.py files. I tried my best to make in-line comments within these files for understanding and reinforce that within the README (in the Design Decisions section). I formatted the package.xml and setup.py files to be properly structured/laid out. In terms of QoS configuration, I handled the configuration for the respective parts I worked on.
 
-Yossaphat: 
+Yossaphat: Worked on the lidar_node, logger_node, safety_monitor_node, launch_file, and the entry_point script for the lidar, logger, and safety monitor. Assisted with README updates and handled QoS configuration for the nodes.
 
 ## Scenario Summary:
 This project implements a multi-node ROS 2 perception pipeline that simulates a simplified autonomous vehicle sensor fusion system. The system integrates asynchronous data streams from a camera and a LiDAR sensor, combines them into a unified perception output, and monitors safety conditions based on the fused data.
@@ -38,6 +38,8 @@ After following the build instructions below, with one terminal running the comm
 
 Use the ROS 2 graph tool to open up the node graph to inspect node and topic connections:
 - rqt_graph
+
+![alt text](image.png)
 
 ## Design Decisions:
 camera_node: The camera_node publishes simulated image frame IDs at 10 Hz on the /sensors/camera topic using the std_msgs/msg/String message type. A BEST_EFFORT, VOLATILE QoS profile with depth 1 was selected to reflect real-time perception system behavior, where only the most recent sensor data is relevant and older messages can be safely dropped. This minimizes latency and memory usage while ensuring high-frequency data flow. The node uses a timer-based callback to simulate a continuous camera stream, incrementing a frame counter and formatting it as a zero-padded string (for example, frame_0001).
@@ -118,3 +120,4 @@ Use the ROS 2 graph tool to inspect node and topic connections:
 - rqt_graph
 
 ## Known Issues:
+To our knowledge at this moment, there are currently no none errors/issues.

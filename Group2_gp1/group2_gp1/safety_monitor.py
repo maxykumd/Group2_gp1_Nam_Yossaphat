@@ -8,7 +8,25 @@ from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 import json
 
 class SafetyMonitor(Node):
-    def __init__(self, node_name: str):
+     """
+    Subscribes to /perception/fused, and checks the LiDAR distance.
+    Publishes alerts on /perception/alerts when an obstacle is detected.
+
+    Subscribes to /system/config with TRANSIENT_LOCAL durability to
+    receive configuration even if started after the config_publisher.
+
+    Attributes:
+        _group (MutuallyExclusiveCallbackGroup): Shared callback group
+            between fused subscriber and alert publisher to protect
+            shared alert state under a multithreaded executor.
+        _threshold (float): LiDAR distance threshold in meters.
+            Configurable via ROS parameter alert_threshold.
+        _alert_publishers (Publisher): Publishes alerts to /perception/alerts.
+        _fused_sub (Subscription): Subscribes to /perception/fused.
+        _config_sub (Subscription): Subscribes to /system/config.
+        _mismatch_sub (Subscription): Intentional QoS mismatch subscriber.
+    """
+    def __init__(self, node_name: String) -> None:
         super().__init__(node_name)
 
         # share btw fused sub and alert pub
@@ -67,7 +85,12 @@ class SafetyMonitor(Node):
 
     def fused_callback(self, msg) -> None:
         """
-        Parse fuse msg and check lidar distance
+        Parses the fused message format 'camera: <frame_id>, lidar: <distance> m'
+        and compares the LiDAR distance against the alert threshold. Logs a
+        warning and publishes an alert if distance is below threshold
+
+        Args:
+            msg (String): Fused message from /perception/fused.
         """
      
         data = msg.data
@@ -93,12 +116,22 @@ class SafetyMonitor(Node):
 
 
     def mismatch_callback(self, msg: String) -> None:
+        """Intentional mismatch callback — should never be called.
+        ROS 2 treats these as incompatible so this
+        callback will never fire.
+
+        Args:
+            msg (String): Message from /sensors/camera (never received).
+        """
         self.get_logger().warn("This should NEVER print cause of mismatch fail")
 
     def config_callback(self, msg: String) -> None:
         """
         Receive sys config and update alert threshold
         Expect to receive json string format msg {"fuse_rate": 5, "alert_threshold": 2}
+        
+        Args:
+            msg (String): JSON config message from /system/config.
         """
         try:
             config = json.loads(msg.data)

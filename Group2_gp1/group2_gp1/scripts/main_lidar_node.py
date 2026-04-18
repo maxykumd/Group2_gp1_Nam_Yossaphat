@@ -4,17 +4,23 @@
 import rclpy
 from group2_gp1.lidar_node import LidarNode
 
-def main(args=None):
-    rclpy.init(args=args)
-    node = LidarNode("lidar_node")
-    
+def main() -> None:
+    """
+    Main runner/entry point for the LidarNode.
+    """
+    rclpy.init()
+
+    lid_node = LidarNode()   # Initializes the CameraNode, which sets up the publisher and timer to start publishing frames at 5 Hz
+
     try:
-        rclpy.spin(node)
+        while rclpy.ok():
+            rclpy.spin(lid_node) 
     except KeyboardInterrupt:
-        node.get_logger().info("Closing lidar_node")
+        lid_node.get_logger().info('Lidar node interrupted.')
     finally:
-        node.destroy_node()
+        lid_node.destroy_node()
         rclpy.shutdown()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()

@@ -18,7 +18,7 @@ class LidarNode(Node):
         _counter (int): Counter for number of published readings.
     """
     
-    def __init__(self, node_name: String) -> None:
+    def __init__(self, node_name: str) -> None:
         super().__init__(node_name)
         
         lidar_qos = QoSProfile( 

@@ -27,7 +27,6 @@ class LidarNode(Node):
             durability=DurabilityPolicy.VOLATILE
         )
 
-        self._counter = 0
         self._message = Float64()
         self._publisher = self.create_publisher(Float64, "/sensors/lidar", lidar_qos) #msg_type: Any,topic: str, qos_profile: QoSProfile 
         self._timer = self.create_timer(0.2, self.publish_simulate_reading)

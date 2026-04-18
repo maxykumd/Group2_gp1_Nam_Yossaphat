@@ -11,7 +11,7 @@ def main() -> None:
     """
     rclpy.init()
 
-    log_node = LidarNode() 
+    log_node = LoggerNode() 
 
     try:
         while rclpy.ok():

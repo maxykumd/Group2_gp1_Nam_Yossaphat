@@ -19,15 +19,15 @@ class CameraNode(Node):
         """
         Initialize the camera publisher node.
         """
-        super().__init__('camera_node')
+        super().__init__('camera_node')   # Node name is camera_node, as specified in the launch file
 
-        cam_qos = QoSProfile(   # Follows Scenario 3 camera sensor QoS (System Architecture - Topics), need to make sure Specific Requirements point 2 later is "RELIABLE" to demonstrate intentional mismatch
-            depth=1,
-            reliability=ReliabilityPolicy.BEST_EFFORT,
+        cam_qos = QoSProfile(   # Follows Scenario 3 camera sensor QoS (System Architecture - Topics)
+            depth=1,   # Depth of 1 since we only care about the latest frame, older frames can be dropped (explained in README.md)
+            reliability=ReliabilityPolicy.BEST_EFFORT,   # The intentional mismatch is explained in the README.md (Please refer to that)
             durability=DurabilityPolicy.VOLATILE
         )
 
-        self._publisher = self.create_publisher(
+        self._publisher = self.create_publisher(   # Publisher for camera frames, topic is /sensors/camera, QoS as defined above
             String,
             '/sensors/camera',
             cam_qos
@@ -40,7 +40,7 @@ class CameraNode(Node):
             self._publish_frame
         )
 
-    def _publish_frame(self) -> None:
+    def _publish_frame(self) -> None:   # Helper function to publish the next camera frame ID, called by the timer every 0.1 seconds
         """
         Publish the next camera frame ID.
         """

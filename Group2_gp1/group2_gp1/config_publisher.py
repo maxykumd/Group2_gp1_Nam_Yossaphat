@@ -16,24 +16,26 @@ class ConfigPublisher(Node):
     """
 
     def __init__(self) -> None:
-        super().__init__('config_publisher')
+        """
+        Initialize the config publisher node, including QoS profile and one-shot timer.
+        """
+        super().__init__('config_publisher')   # Node name is config_publisher, as specified in the launch file
 
-        # QoS: RELIABLE + TRANSIENT_LOCAL (latched behavior)
-        config_qos = QoSProfile(
-            depth=1,
+        config_qos = QoSProfile(   # Follows Scenario 3 config publisher QoS (System Architecture - Topics)
+            depth=1,   # Depth of 1 since we only need to publish the config once, and late-joining nodes should get the latest config (explained in README.md)
             reliability=ReliabilityPolicy.RELIABLE,
-            durability=DurabilityPolicy.TRANSIENT_LOCAL
+            durability=DurabilityPolicy.TRANSIENT_LOCAL   # TRANSIENT_LOCAL durability ensures late-joining nodes receive the last published config message, which is important for system configuration (explained in README.md)
         )
 
-        self._publisher = self.create_publisher(
+        self._publisher = self.create_publisher(   # Publisher for system config, topic is /system/config, QoS as defined above
             String,
             '/system/config',
             config_qos
         )
 
         # One-shot timer to publish once after startup
-        self._timer = self.create_timer(
-            0.5,  # small delay ensures publisher is ready
+        self._timer = self.create_timer(   # Small delay ensures publisher is ready before publishing config
+            0.5,
             self._publish_config
         )
 
@@ -42,8 +44,8 @@ class ConfigPublisher(Node):
         Publish configuration once, then stop timer.
         """
         config = {
-            "fusion_rate": 5,
-            "alert_threshold": 2.0
+            "fusion_rate": 5,   # Fusion node publishes at 5 Hz, so config publisher includes this info in the config message for late-joining nodes (explained in README.md)
+            "alert_threshold": 2.0   # Default LiDAR distance threshold for safety alerts, included in config message for late-joining nodes (explained in README.md)
         }
 
         msg = String()
@@ -53,5 +55,4 @@ class ConfigPublisher(Node):
 
         self.get_logger().info(f'Published system config: {msg.data}')
 
-        # Stop timer so it only runs once
-        self._timer.cancel()
+        self._timer.cancel()   # Stop the timer after publishing config once

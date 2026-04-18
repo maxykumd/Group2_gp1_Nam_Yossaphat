@@ -10,13 +10,13 @@ def main() -> None:
     """
     rclpy.init()
 
-    cam_node = CameraNode()
+    cam_node = CameraNode()   # Initializes the CameraNode, which sets up the publisher and timer to start publishing frames at 10 Hz
 
     try:
         while rclpy.ok():
-            rclpy.spin(cam_node)
+            rclpy.spin(cam_node)   # Keeps the node alive and responsive to the timer callback that publishes camera frames every 0.1 seconds (10 Hz)
     except KeyboardInterrupt:
-        cam_node.get_logger().info('Camera node interrupted.')  
+        cam_node.get_logger().info('Camera node interrupted.')
     finally:
         cam_node.destroy_node()
         rclpy.shutdown()

@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+from glob import glob
 
 package_name = 'group2_gp1'
 
@@ -10,6 +11,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name + '/launch',
+        glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -24,12 +27,12 @@ setup(
     },
     entry_points={
     	'console_scripts': [
-           'camera_node = group2_gp1.scripts.main_camera_node:main',
-           'lidar_node = group2_gp1.scripts.main_lidar_node:main',
-           'fusion_node = group2_gp1.scripts.main_fusion_node:main',
-           'safety_monitor = group2_gp1.scripts.main_safety_monitor:main',
-           'logger = group2_gp1.scripts.main_logger:main',
-           'config_publisher = group2_gp1.scripts.main_config_publisher:main',
+           'main_camera_node = group2_gp1.scripts.main_camera_node:main',
+           'main_lidar_node = group2_gp1.scripts.main_lidar_node:main',
+           'main_fusion_node = group2_gp1.scripts.main_fusion_node:main',
+           'main_safety_monitor = group2_gp1.scripts.main_safety_monitor:main',
+           'main_logger = group2_gp1.scripts.main_logger:main',
+           'main_config_publisher = group2_gp1.scripts.main_config_publisher:main',
         ],
     },
 )

@@ -6,10 +6,16 @@ from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from std_msgs.msg import String
 
 class LoggerNode(Node):
-    def __init__(self, node_name: String ):
-        super().__init__(node_name)
+    """
+    Subscribes to the /perception/fused topic and logs each message
+    with a timestamp. Only started when enable_logger:=true is passed
+    to the launch file via IfCondition.
 
-        self._enable = False
+    Attributes:
+        _subscription (Subscription): Subscribes to /perception/fused.
+    """
+    def __init__(self, node_name: String ) -> None:
+        super().__init__(node_name)
 
         fuse_qos = QoSProfile(
             depth=10,
@@ -21,9 +27,12 @@ class LoggerNode(Node):
 
 
     def log_callback(self, msg: String) -> None:
-        if not self._enable:
-            return
-        
+        """Log each fused message with a timestamp.
+
+        Args:
+            msg (String): The fused message from /perception/fused,
+                formatted as 'camera: <frame_id>, lidar: <distance> m'.
+        """
         # Get current time
         current = self.get_clock().now().to_msg()
         self.get_logger().info(f"[{current.sec}.{current.nanosec}] {msg.data}")

@@ -33,6 +33,8 @@ The system also intentionally includes a QoS mismatch scenario, where a RELIABLE
 Overall, this project illustrates how independent ROS 2 nodes can be composed into a coherent, real-time system that balances performance, reliability, and modularity while leveraging advanced middleware features such as QoS policies, executors, and launch configurations.
 
 ## Node Graph:
+<img width="639" height="214" alt="image" src="https://github.com/user-attachments/assets/d2602a15-447c-48ea-983f-309131a5ae1b" />
+
 
 ## Design Decisions:
 camera_node: The camera_node publishes simulated image frame IDs at 10 Hz on the /sensors/camera topic using the std_msgs/msg/String message type. A BEST_EFFORT, VOLATILE QoS profile with depth 1 was selected to reflect real-time perception system behavior, where only the most recent sensor data is relevant and older messages can be safely dropped. This minimizes latency and memory usage while ensuring high-frequency data flow. The node uses a timer-based callback to simulate a continuous camera stream, incrementing a frame counter and formatting it as a zero-padded string (for example, frame_0001).
@@ -52,8 +54,6 @@ config_publisher: TRANSIENT_LOCAL ensures that late-joining subscribers (like fu
 The configuration is published using a one-shot timer with a short delay (0.5 seconds). This ensures that the publisher is fully initialized Subscribers have time to connect and after publishing, the timer is canceled to prevent repeated messages.
 
 A depth of 1 is used because only the most recent configuration is relevant. Older configurations are not needed and should not be buffered.
-
-<img width="639" height="214" alt="image" src="https://github.com/user-attachments/assets/d2602a15-447c-48ea-983f-309131a5ae1b" />
 
 ## Build/Run Instructions:
 

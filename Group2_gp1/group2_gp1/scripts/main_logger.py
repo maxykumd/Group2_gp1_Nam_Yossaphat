@@ -11,7 +11,7 @@ def main() -> None:
     """
     rclpy.init()
 
-    log_node = LoggerNode() 
+    log_node = LoggerNode("logger_node") 
 
     try:
         while rclpy.ok():

@@ -5,22 +5,23 @@ import rclpy
 from group2_gp1.safety_monitor import SafetyMonitor
 
 
-def main(args=None):
+def main() -> None:
     """
-    Entry point for the SafetyMonitor node
+    Main runner/entry point for the SafetyMonitor node.
     """
-    rclpy.init(args=args)
-    
-    safety = SafetyMonitor("safety_monitor")
-    
+    rclpy.init()
+
+    safety = SafetyMonitor("safety_monitor") 
+
     try:
-        rclpy.spin(safety) # Spin to process /perception/fused callbacks and publish alerts
+        while rclpy.ok():
+            rclpy.spin(safety)   # Spin to process /perception/fused callbacks and publish alert
     except KeyboardInterrupt:
-        safety.get_logger().info("Closing safety_monitor")
+        safety.get_logger().info('Safety node interrupted.')
     finally:
         safety.destroy_node()
         rclpy.shutdown()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

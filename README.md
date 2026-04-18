@@ -39,7 +39,7 @@ After following the build instructions below, with one terminal running the comm
 Use the ROS 2 graph tool to open up the node graph to inspect node and topic connections:
 - rqt_graph
 
-![alt text](image.png)
+![alt text](https://private-user-images.githubusercontent.com/257414274/580248945-d2602a15-447c-48ea-983f-309131a5ae1b.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzY0ODE1MTYsIm5iZiI6MTc3NjQ4MTIxNiwicGF0aCI6Ii8yNTc0MTQyNzQvNTgwMjQ4OTQ1LWQyNjAyYTE1LTQ0N2MtNDhlYS05ODNmLTMwOTEzMWE1YWUxYi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwNDE4JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDQxOFQwMzAwMTZaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0wMWIxMDM1YTQ3NjllYTA0NzBiYWY1OGQ2MDE2N2U3MDM1YThjNGFiZmI3MmRkMzlhYzY1OGQwOTkyMTlhZWJlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZyZXNwb25zZS1jb250ZW50LXR5cGU9aW1hZ2UlMkZwbmcifQ.vIOrjIWyKTFBIry4HlRGGiN6me6PiWLFPROiGRQY0zw)
 
 ## Design Decisions:
 camera_node: The camera_node publishes simulated image frame IDs at 10 Hz on the /sensors/camera topic using the std_msgs/msg/String message type. A BEST_EFFORT, VOLATILE QoS profile with depth 1 was selected to reflect real-time perception system behavior, where only the most recent sensor data is relevant and older messages can be safely dropped. This minimizes latency and memory usage while ensuring high-frequency data flow. The node uses a timer-based callback to simulate a continuous camera stream, incrementing a frame counter and formatting it as a zero-padded string (for example, frame_0001).

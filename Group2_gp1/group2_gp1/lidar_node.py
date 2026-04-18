@@ -1,7 +1,7 @@
 # Name: Yossaphat Kulvatunyou & Nam Facchetti
 # Module: lidar_node.py - Scenario 3 Lidar Node
 
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, String
 from rclpy.node import Node
 import random
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy

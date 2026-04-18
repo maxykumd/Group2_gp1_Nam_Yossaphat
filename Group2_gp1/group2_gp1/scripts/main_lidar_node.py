@@ -10,7 +10,7 @@ def main() -> None:
     """
     rclpy.init()
 
-    lid_node = LidarNode()   # Initializes the CameraNode, which sets up the publisher and timer to start publishing frames at 5 Hz
+    lid_node = LidarNode()   # Initializes the LidarNode, which sets up the publisher and timer to start publishing frames at 5 Hz
 
     try:
         while rclpy.ok():

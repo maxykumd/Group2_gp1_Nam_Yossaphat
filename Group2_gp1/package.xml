@@ -3,7 +3,7 @@
 <package format="3">
   <name>group2_gp1</name>
   <version>0.0.0</version>
-  <description>ROS 2 Sensor Fusion Pipeline for ENPM605 Group2 GP1</description>
+  <description>ROS 2 Sensor Fusion Pipeline (Scenario 3) for ENPM605 Group 2 GP1. Implements a multi-node perception system integrating camera and LiDAR data using ROS 2 publishers, subscribers, QoS policies, executors, and launch configurations.</description>
   <maintainer email="maxyk@umd.edu">maxyk</maintainer>
   <maintainer email="gfacchet@terpmail.umd.edu">namfacchetti</maintainer>
   <license>Apache-2.0</license>

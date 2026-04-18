@@ -18,7 +18,7 @@ setup(
     zip_safe=True,
     maintainer='maxykumd , namfacchetti',
     maintainer_email='maxyk@umd.edu, gfacchet@terpmail.umd.edu',
-    description='ROS 2 Sensor Fusion Pipeline for ENPM605, Group2 GP1',
+    description='ROS 2 Sensor Fusion Pipeline (Scenario 3) for ENPM605 Group 2 GP1. Implements a multi-node perception system integrating camera and LiDAR data using ROS 2 publishers, subscribers, QoS policies, executors, and launch configurations.',
     license='Apache-2.0',
     extras_require={
         'test': [

@@ -48,6 +48,8 @@ The configuration is published using a one-shot timer with a short delay (0.5 se
 
 A depth of 1 is used because only the most recent configuration is relevant. Older configurations are not needed and should not be buffered.
 
+<img width="639" height="214" alt="image" src="https://github.com/user-attachments/assets/d2602a15-447c-48ea-983f-309131a5ae1b" />
+
 ## Build/Run Instructions:
 
 ### Prerequisites

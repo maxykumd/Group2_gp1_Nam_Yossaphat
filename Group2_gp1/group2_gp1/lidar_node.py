@@ -15,7 +15,6 @@ class LidarNode(Node):
         _publisher (Publisher): Publishes distance data to /sensors/lidar.
         _timer (Timer): Controls publishing rate (5 Hz).
         _message (Float64): Message object storing LiDAR distance.
-        _counter (int): Counter for number of published readings.
     """
     
     def __init__(self, node_name: String) -> None:
@@ -39,4 +38,3 @@ class LidarNode(Node):
         self._message.data = random.uniform(0.5, 50.0)
         self._publisher.publish(self._message)
         self.get_logger().info(f"Lidar Distance: {self._message.data:.2f} m")
-        self._counter += 1

@@ -9,7 +9,7 @@ class LoggerNode(Node):
     def __init__(self, node_name: String ):
         super().__init__(node_name)
 
-        self.enable = False
+        self._enable = False
 
         fuse_qos = QoSProfile(
             depth=10,

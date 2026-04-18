@@ -129,13 +129,15 @@ class SafetyMonitor(Node):
         """
         Receive sys config and update alert threshold
         Expect to receive json string format msg {"fuse_rate": 5, "alert_threshold": 2}
-        
-        Args:
-            msg (String): JSON config message from /system/config.
         """
         try:
             config = json.loads(msg.data)
-            self._threshold = float(config.get("alert_threshold", 2.0))
+            # update threshold from config only if threshold still default 2.0 , user didnt pass argument
+            config_threshold = float(config.get("alert_threshold", self._threshold))
+            if self._threshold == 2.0:
+                self._threshold = config_threshold
             self.get_logger().info(f"Config received and threshold update to {self._threshold}m")
         except ValueError as e:
             self.get_logger().error(f"Failed to parse config msg: {e}")
+
+

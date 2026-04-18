@@ -5,18 +5,23 @@ import rclpy
 from group2_gp1.logger import LoggerNode
 
 
-def main(args=None):
-    rclpy.init(args=args)
-    node = LoggerNode("logger")
-    
+def main() -> None:
+    """
+    Main runner/entry point for the LoggerNode.
+    """
+    rclpy.init()
+
+    log_node = LidarNode() 
+
     try:
-        rclpy.spin(node)
+        while rclpy.ok():
+            rclpy.spin(log_node)  # Spin to process incoming /perception/fused messages
     except KeyboardInterrupt:
-        node.get_logger().info("Closing logger")
+        log_node.get_logger().info('Logger node interrupted.')
     finally:
-        node.destroy_node()
+        log_node.destroy_node()
         rclpy.shutdown()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

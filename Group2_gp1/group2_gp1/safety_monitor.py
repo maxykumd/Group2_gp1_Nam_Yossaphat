@@ -26,7 +26,7 @@ class SafetyMonitor(Node):
         _config_sub (Subscription): Subscribes to /system/config.
         _mismatch_sub (Subscription): Intentional QoS mismatch subscriber.
     """
-    def __init__(self, node_name: String) -> None:
+    def __init__(self, node_name: str) -> None:
         super().__init__(node_name)
 
         # share btw fused sub and alert pub
@@ -83,7 +83,7 @@ class SafetyMonitor(Node):
             String, '/sensors/camera', self.mismatch_callback, mismatch_qos)
 
 
-    def fused_callback(self, msg) -> None:
+    def fused_callback(self, msg: str) -> None:
         """
         Parses the fused message format 'camera: <frame_id>, lidar: <distance> m'
         and compares the LiDAR distance against the alert threshold. Logs a
@@ -115,7 +115,7 @@ class SafetyMonitor(Node):
             self.get_logger().info(data)
 
 
-    def mismatch_callback(self, msg: String) -> None:
+    def mismatch_callback(self, msg: str) -> None:
         """Intentional mismatch callback — should never be called.
         ROS 2 treats these as incompatible so this
         callback will never fire.
@@ -125,7 +125,7 @@ class SafetyMonitor(Node):
         """
         self.get_logger().warn("This should NEVER print cause of mismatch fail")
 
-    def config_callback(self, msg: String) -> None:
+    def config_callback(self, msg: str) -> None:
         """
         Receive sys config and update alert threshold
         Expect to receive json string format msg {"fuse_rate": 5, "alert_threshold": 2}

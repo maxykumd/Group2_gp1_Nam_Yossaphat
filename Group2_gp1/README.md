@@ -32,15 +32,15 @@ Overall, this project illustrates how independent ROS 2 nodes can be composed in
 ## Design Decisions:
 camera_node: The camera_node publishes simulated image frame IDs at 10 Hz on the /sensors/camera topic using the std_msgs/msg/String message type. A BEST_EFFORT, VOLATILE QoS profile with depth 1 was selected to reflect real-time perception system behavior, where only the most recent sensor data is relevant and older messages can be safely dropped. This minimizes latency and memory usage while ensuring high-frequency data flow. The node uses a timer-based callback to simulate a continuous camera stream, incrementing a frame counter and formatting it as a zero-padded string (for example, frame_0001).
 
-The camera_node uses BEST_EFFORT reliability, which is intentionally incompatible with a RELIABLE subscriber used elsewhere in the system to demonstrate QoS mismatch behavior. This mismatch results in no data delivery, which can be verified using: ros2 topic info /sensors/camera -v
+The camera_node uses BEST_EFFORT reliability, which is intentionally incompatible with a RELIABLE subscriber used in safety_monitor_node to demonstrate QoS mismatch behavior. This mismatch results in no data delivery, which can be verified using: ros2 topic info /sensors/camera -v
 
-lidar_node: 
+lidar_node : the node use BEST_EFFPRT, VOLATILE QoS profile with depth 1 which was select for the same reason as the camera node. readings are dropped if fusion node callback is slow.
 
 fusion_node: MutuallyExclusiveCallbackGroup is used for camera and LiDAR callbacks to prevent race conditions when updating shared state (_latest_frame, _latest_distance) under a MultiThreadedExecutor. ReentrantCallbackGroup is used for the fusion timer so it can execute independently of sensor callbacks and maintain a consistent publishing rate. Depth = 1 for sensors ensures only the most recent data is used, mimicking real-time perception systems and avoiding stale sensor data. TRANSIENT_LOCAL config topic allows late-joining nodes to receive configuration immediately.
 
-safety_monitor: 
+safety_monitor_node : it use RELIABLE,VOLATILE QoS with depth 10 to make sure no alerts are missed. A MutuallyExclusiveCallbackGroup is share between fuse subscriber and alert publisher so there will be no race condition(each take turn). The alert_threshold is a ros parameter which can be overide at launch using argument. It also subscribe to /system/config with TRANSIENT_LOCAL to receive msg even if it start after config publisher. Intentional QoS mismatch is show by subsricing to /sensors/camera with RELIABLE reliability while publisher use BEST_EFFORT, which cause data to not be delievered.
 
-logger: 
+logger_node : use RELIABLE,VOLATILE QoS with depth 10 as well. So no message is lost and the msg wont be store for late joining subscriber. The node is launch when eable_logger is true by the launch file.
 
 config_publisher: TRANSIENT_LOCAL ensures that late-joining subscribers (like fusion_node and safety_monitor) will still receive the last published configuration message. This mimics latched behavior. Additionally, A short delay ensures that subscribers have time to connect before publishing. Without this, some nodes might miss the message even with TRANSIENT_LOCAL.
 

@@ -65,7 +65,7 @@ class SafetyMonitor(Node):
             String, '/sensors/camera', self.mismatch_callback, mismatch_qos)
 
 
-    def fused_callback(self, msg) -> None:
+    def fused_callback(self, msg: String) -> None:
         """
         Parse fuse msg and check lidar distance
         """
@@ -93,7 +93,7 @@ class SafetyMonitor(Node):
 
 
     def mismatch_callback(self, msg: String) -> None:
-        self.get_logger().warn("This should NEVER print cause of mismatch fail")
+        self.get_logger().warn("This should never print cause of mismatch fail")
 
     def config_callback(self, msg: String) -> None:
         """

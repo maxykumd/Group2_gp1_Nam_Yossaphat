@@ -14,10 +14,10 @@ Member 2: Yossaphat Kulvatunyou
 
 UID: 112362550
 
-## Contribution:
-Yossaphat : lidar_node, logger_node, safety_monitor_node, launch_file and the entry_point script for lidar,logger,safety
+## Contributions:
+Nam: I worked on the camera_node.py, main_camera_node.py, fusion_node.py, main_fusion_node.py, config_publisher.py, and main_config_publisher.py files. I tried my best to make in-line comments within these files for understanding and reinforce that within the README (in the Design Decisions section). I formatted the package.xml and setup.py files to be properly structured/laid out. In terms of QoS configuration, I handled the configuration for the respective parts I worked on.
 
-Nam :
+Yossaphat: Worked on the lidar_node, logger_node, safety_monitor_node, launch_file, and the entry_point script for the lidar, logger, and safety monitor. Assisted with README updates and handled QoS configuration for the nodes.
 
 ## Scenario Summary:
 This project implements a multi-node ROS 2 perception pipeline that simulates a simplified autonomous vehicle sensor fusion system. The system integrates asynchronous data streams from a camera and a LiDAR sensor, combines them into a unified perception output, and monitors safety conditions based on the fused data.
@@ -33,21 +33,26 @@ The system also intentionally includes a QoS mismatch scenario, where a RELIABLE
 Overall, this project illustrates how independent ROS 2 nodes can be composed into a coherent, real-time system that balances performance, reliability, and modularity while leveraging advanced middleware features such as QoS policies, executors, and launch configurations.
 
 ## Node Graph:
-<img width="639" height="214" alt="image" src="https://github.com/user-attachments/assets/d2602a15-447c-48ea-983f-309131a5ae1b" />
+After following the build instructions below, with one terminal running the command:
+- ros2 launch group2_gp1 system.launch.py enable_logger:=true
 
+Use the ROS 2 graph tool to open up the node graph to inspect node and topic connections:
+- rqt_graph
+
+![alt text](https://private-user-images.githubusercontent.com/257414274/580248945-d2602a15-447c-48ea-983f-309131a5ae1b.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzY0ODE1MTYsIm5iZiI6MTc3NjQ4MTIxNiwicGF0aCI6Ii8yNTc0MTQyNzQvNTgwMjQ4OTQ1LWQyNjAyYTE1LTQ0N2MtNDhlYS05ODNmLTMwOTEzMWE1YWUxYi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwNDE4JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDQxOFQwMzAwMTZaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0wMWIxMDM1YTQ3NjllYTA0NzBiYWY1OGQ2MDE2N2U3MDM1YThjNGFiZmI3MmRkMzlhYzY1OGQwOTkyMTlhZWJlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZyZXNwb25zZS1jb250ZW50LXR5cGU9aW1hZ2UlMkZwbmcifQ.vIOrjIWyKTFBIry4HlRGGiN6me6PiWLFPROiGRQY0zw)
 
 ## Design Decisions:
 camera_node: The camera_node publishes simulated image frame IDs at 10 Hz on the /sensors/camera topic using the std_msgs/msg/String message type. A BEST_EFFORT, VOLATILE QoS profile with depth 1 was selected to reflect real-time perception system behavior, where only the most recent sensor data is relevant and older messages can be safely dropped. This minimizes latency and memory usage while ensuring high-frequency data flow. The node uses a timer-based callback to simulate a continuous camera stream, incrementing a frame counter and formatting it as a zero-padded string (for example, frame_0001).
 
-The camera_node uses BEST_EFFORT reliability, which is intentionally incompatible with a RELIABLE subscriber used in safety_monitor_node to demonstrate QoS mismatch behavior. This mismatch results in no data delivery, which can be verified using: ros2 topic info /sensors/camera -v
+The camera_node uses BEST_EFFORT reliability, which is intentionally incompatible with a RELIABLE subscriber used elsewhere in the system to demonstrate QoS mismatch behavior. This mismatch results in no data delivery, which can be verified using: ros2 topic info /sensors/camera -v
 
-lidar_node : the node use BEST_EFFPRT, VOLATILE QoS profile with depth 1 which was select for the same reason as the camera node. readings are dropped if fusion node callback is slow.
+lidar_node: The node uses BEST_EFFPRT, VOLATILE QoS profile with depth 1 which was select for the same reason as the camera node. Readings are dropped if the fusion node callback is slow.
 
 fusion_node: MutuallyExclusiveCallbackGroup is used for camera and LiDAR callbacks to prevent race conditions when updating shared state (_latest_frame, _latest_distance) under a MultiThreadedExecutor. ReentrantCallbackGroup is used for the fusion timer so it can execute independently of sensor callbacks and maintain a consistent publishing rate. Depth = 1 for sensors ensures only the most recent data is used, mimicking real-time perception systems and avoiding stale sensor data. TRANSIENT_LOCAL config topic allows late-joining nodes to receive configuration immediately.
 
-safety_monitor_node : it use RELIABLE,VOLATILE QoS with depth 10 to make sure no alerts are missed. A MutuallyExclusiveCallbackGroup is share between fuse subscriber and alert publisher so there will be no race condition(each take turn). The alert_threshold is a ros parameter which can be overide at launch using argument. It also subscribe to /system/config with TRANSIENT_LOCAL to receive msg even if it start after config publisher. Intentional QoS mismatch is show by subsricing to /sensors/camera with RELIABLE reliability while publisher use BEST_EFFORT, which cause data to not be delievered.
+safety_monitor: It uses RELIABLE, VOLATILE QoS with depth 10 to make sure no alerts are missed. A MutuallyExclusiveCallbackGroup is share between fuse subscriber and alert publisher so there will be no race condition(each take turn). The alert_threshold is a ros parameter which can be overide at launch using argument. It also subscribe to /system/config with TRANSIENT_LOCAL to receive msg even if it start after config publisher. Intentional QoS mismatch is show by subsricing to /sensors/camera with RELIABLE reliability while publisher use BEST_EFFORT, which cause data to not be delievered.
 
-logger_node : use RELIABLE,VOLATILE QoS with depth 10 as well. So no message is lost and the msg wont be store for late joining subscriber. The node is launch when eable_logger is true by the launch file.
+logger: Uses RELIABLE,VOLATILE QoS with depth 10 as well. So no message is lost and the message won't be stored for late joining subscriber. The node is launched when enable_logger is true by the launch file.
 
 config_publisher: TRANSIENT_LOCAL ensures that late-joining subscribers (like fusion_node and safety_monitor) will still receive the last published configuration message. This mimics latched behavior. Additionally, A short delay ensures that subscribers have time to connect before publishing. Without this, some nodes might miss the message even with TRANSIENT_LOCAL.
 
@@ -113,3 +118,6 @@ This should immediately return the last published configuration.
 ### Visualize Node Graph
 Use the ROS 2 graph tool to inspect node and topic connections:
 - rqt_graph
+
+## Known Issues:
+To our knowledge at this moment, there are currently no none errors/issues.

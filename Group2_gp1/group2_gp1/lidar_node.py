@@ -18,10 +18,10 @@ class LidarNode(Node):
         _counter (int): Counter for number of published readings.
     """
     
-    def __init__(self, node_name: str) -> None:
+    def __init__(self, node_name: str):
         super().__init__(node_name)
         
-        lidar_qos = QoSProfile(
+        lidar_qos = QoSProfile(   # Follows Scenario 3 camera Ssensor QoS (System Architecture - Topics), need to make sure Specific Requirements point 2 later is "RELIABLE" to demonstrate intentional mismatch
             depth=1,
             reliability=ReliabilityPolicy.BEST_EFFORT,
             durability=DurabilityPolicy.VOLATILE

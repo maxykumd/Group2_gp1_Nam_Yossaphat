@@ -14,7 +14,7 @@ class LoggerNode(Node):
     Attributes:
         _subscription (Subscription): Subscribes to /perception/fused.
     """
-    def __init__(self, node_name: str ) -> None:
+    def __init__(self, node_name: String ) -> None:
         super().__init__(node_name)
 
         fuse_qos = QoSProfile(
@@ -26,7 +26,7 @@ class LoggerNode(Node):
             String, '/perception/fused', self.log_callback, fuse_qos)
 
 
-    def log_callback(self, msg: str) -> None:
+    def log_callback(self, msg: String) -> None:
         """Log each fused message with a timestamp.
 
         Args:

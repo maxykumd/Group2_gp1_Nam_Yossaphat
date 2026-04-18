@@ -46,15 +46,21 @@ camera_node: The camera_node publishes simulated image frame IDs at 10 Hz on the
 
 The camera_node uses BEST_EFFORT reliability, which is intentionally incompatible with a RELIABLE subscriber used elsewhere in the system to demonstrate QoS mismatch behavior. This mismatch results in no data delivery, which can be verified using: ros2 topic info /sensors/camera -v
 
-lidar_node: The node uses BEST_EFFPRT, VOLATILE QoS profile with depth 1 which was select for the same reason as the camera node. Readings are dropped if the fusion node callback is slow.
+lidar_node: The node uses BEST_EFFORT, VOLATILE QoS profile with depth 1 which was select for the same reason as the camera node. Readings are dropped if the fusion node callback is slow.
 
-fusion_node: MutuallyExclusiveCallbackGroup is used for camera and LiDAR callbacks to prevent race conditions when updating shared state (_latest_frame, _latest_distance) under a MultiThreadedExecutor. ReentrantCallbackGroup is used for the fusion timer so it can execute independently of sensor callbacks and maintain a consistent publishing rate. Depth = 1 for sensors ensures only the most recent data is used, mimicking real-time perception systems and avoiding stale sensor data. TRANSIENT_LOCAL config topic allows late-joining nodes to receive configuration immediately.
+fusion_node: MutuallyExclusiveCallbackGroup is used for the camera and LiDAR subscription callbacks to prevent race conditions when updating shared state (_latest_frame, _latest_distance) under a MultiThreadedExecutor. A ReentrantCallbackGroup is used for the fusion publishing timer so it can execute independently of sensor callbacks and maintain a consistent output rate.
+
+Because both sensor topics use a QoS depth of 1, only the most recent message is stored in the queue. If the fusion node processes messages slower than the sensor publishing rate, intermediate messages are dropped. This design prioritizes low latency and ensures that only the most up-to-date sensor data is used for fusion, which is appropriate for real-time perception systems.
+
+The /system/config topic uses TRANSIENT_LOCAL durability so that late-joining nodes (including the fusion node) can immediately receive the latest configuration without requiring re-publication. Although the configuration includes a "fusion_rate" parameter, the fusion node currently operates at a fixed rate defined internally by its timer (5 Hz), and does not dynamically update this rate at runtime.
 
 safety_monitor: It uses RELIABLE, VOLATILE QoS with depth 10 to make sure no alerts are missed. A MutuallyExclusiveCallbackGroup is share between fuse subscriber and alert publisher so there will be no race condition(each take turn). The alert_threshold is a ros parameter which can be overide at launch using argument. It also subscribe to /system/config with TRANSIENT_LOCAL to receive msg even if it start after config publisher. Intentional QoS mismatch is show by subsricing to /sensors/camera with RELIABLE reliability while publisher use BEST_EFFORT, which cause data to not be delievered.
 
 logger: Uses RELIABLE,VOLATILE QoS with depth 10 as well. So no message is lost and the message won't be stored for late joining subscriber. The node is launched when enable_logger is true by the launch file.
 
-config_publisher: TRANSIENT_LOCAL ensures that late-joining subscribers (like fusion_node and safety_monitor) will still receive the last published configuration message. This mimics latched behavior. Additionally, A short delay ensures that subscribers have time to connect before publishing. Without this, some nodes might miss the message even with TRANSIENT_LOCAL.
+config_publisher: TRANSIENT_LOCAL ensures that late-joining subscribers (like fusion_node and safety_monitor) will still receive the last published configuration message. This behavior was verified using: 
+- ros2 topic echo /system/config --once 
+A late-joining subscriber immediately receives the last published configuration message, demonstrating TRANSIENT_LOCAL durability. This mimics latched behavior. Additionally, A short delay ensures that subscribers have time to connect before publishing. Without this, some nodes might miss the message even with TRANSIENT_LOCAL.
 
 The configuration is published using a one-shot timer with a short delay (0.5 seconds). This ensures that the publisher is fully initialized Subscribers have time to connect and after publishing, the timer is canceled to prevent repeated messages.
 
@@ -121,3 +127,5 @@ Use the ROS 2 graph tool to inspect node and topic connections:
 
 ## Known Issues:
 To our knowledge at this moment, there are currently no none errors/issues.
+
+One limitation is that fused messages are parsed using string operations rather than structured message types, which may be less robust in larger systems.

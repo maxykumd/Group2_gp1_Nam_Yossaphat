@@ -13,7 +13,8 @@ def main(args=None):
     config_pub_node = ConfigPublisher()   # Node name is config_publisher, as specified in the launch file
 
     try:
-        rclpy.spin(config_pub_node)   # Spin the node to allow it to publish the config message once, then it will automatically stop due to the one-shot timer in the ConfigPublisher class
+        while rclpy.ok():
+            rclpy.spin_once(config_pub_node, timeout_sec=0.1)   # Spins the node to allow it to publish the configuration message. The one-shot timer in the ConfigPublisher class will trigger the publication of the config message immediately after startup, and then the node will shut down after publishing. The loop with spin_once allows for shutdown on interrupt while waiting for the timer callback to execute.
     except KeyboardInterrupt:
         config_pub_node.get_logger().info('Config publisher interrupted.')
     finally:

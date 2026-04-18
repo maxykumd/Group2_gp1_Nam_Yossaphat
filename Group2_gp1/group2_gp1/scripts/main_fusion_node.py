@@ -17,7 +17,8 @@ def main(args: list[str] | None = None) -> None:
     executor.add_node(fuse_node)   # Adds the fusion node to the executor so that its callbacks and timer can be executed concurrently
 
     try:
-        executor.spin()   # Spins the executor to start processing callbacks and timers for the fusion node. The fusion output will be published at a fixed rate (default 5 Hz) regardless of the timing of incoming camera and LiDAR messages, due to the use of a ReentrantCallbackGroup for the timer (explained in README.md)
+        while rclpy.ok():
+            executor.spin_once(timeout_sec=0.1)   # Spins the executor to process callbacks and timers, with a timeout to allow for shutdown on interrupt
     except KeyboardInterrupt:
         fuse_node.get_logger().info('Fusion node interrupted.')
     finally:
